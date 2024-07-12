@@ -46,6 +46,7 @@ private struct CreateProject {
         try copyGodotDirectory()
         try createGodotProjectFile(projectName: projectName)
         try createGDExtensionFile(projectName: projectName)
+        try copyReadmeFile()
     }
 }
 
@@ -301,6 +302,15 @@ func copyGodotDirectory() throws {
     let directory = fileManager.currentDirectoryPath
     
     let destinationPath = directory + "/godot"
+    try fileManager.copyItem(atPath: url.path, toPath: destinationPath)
+}
+
+private func copyReadmeFile() throws {
+    guard let url = Bundle.module.url(forResource: "README.md", withExtension: nil) else {
+        throw Error.badURL
+    }
+    let directory = fileManager.currentDirectoryPath
+    let destinationPath = directory + "/README.md"
     try fileManager.copyItem(atPath: url.path, toPath: destinationPath)
 }
 
