@@ -68,16 +68,26 @@ enum DataFactory {
         """
         import SwiftGodot
 
-        #warning("Remove this HelloWorld class")
+        #warning("Remove this Icon2D class")
         @Godot(.tool)
-        public class HelloWorld: Node {
-            public override static func _ready() {
+        public class Icon2D: Sprite2D {
+            public override func _ready() {
                 GD.printDebug("Hello world!")
+                guard let image = GD.load(path: "res://icon.svg") as? Texture2D else {
+                    fatalError("Could not load res://icon.svg")
+                }
+
+                texture = image
+                scale = .init(x: 0.25, y: 0.25)
+            }
+
+            public override func _process(delta: Double) {
+                rotate(radians: delta)
             }
         }
 
         public let godotTypes: [Wrapped.Type] = [
-            HelloWorld.self
+            Icon2D.self
         ]
 
         #initSwiftExtension(cdecl: "swift_entry_point", types: godotTypes)
@@ -89,15 +99,20 @@ enum DataFactory {
     static func makeExecutableFileData(projectName: String) throws -> Data {
         try
         """
-        import \(projectName)
+        import Foundation
         import SwiftGodot
         import SwiftGodotKit
+        import \(projectName)
 
-        static func loadScene (scene: SceneTree) {
-            scene.root?.addChild(node: HelloWorld())
+        guard let packPath = Bundle.module.path(forResource: "\(projectName)", ofType: "pck") else {
+            fatalError("Could not load Pack")
         }
 
-        static func registerTypes (level: GDExtension.InitializationLevel) {
+        func loadScene (scene: SceneTree) {
+            scene.root?.addChild(node: Icon2D())
+        }
+
+        func registerTypes (level: GDExtension.InitializationLevel) {
             switch level {
             case .scene:
                 \(projectName).godotTypes.forEach { register(type: $0) }
@@ -107,7 +122,9 @@ enum DataFactory {
         }
 
         runGodot(
-            args: [],
+            args: [
+                "--main-pack", packPath
+            ],
             initHook: registerTypes,
             loadScene: loadScene,
             loadProjectSettings: { settings in }
