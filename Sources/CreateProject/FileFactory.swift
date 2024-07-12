@@ -26,14 +26,15 @@ enum FileFactory {
         let librarySourceFile = libraryDirectory + "/" + projectName + ".swift"
         try fileManager.createDirectory(atPath: libraryDirectory, withIntermediateDirectories: true)
         try fileManager.createFile(atPath: librarySourceFile, contents: try DataFactory.makeLibraryFileData(), replace: false)
-        let libraryResourcesDirectory = directory + "/Sources/\(projectName)/Resources"
-        try fileManager.createDirectory(atPath: libraryResourcesDirectory, withIntermediateDirectories: true)
     }
 
-    static func createExecutableTarget(projectName: String, executableName: String) throws {
+    static func createExecutableTarget(projectName: String) throws {
+        let executableName = projectName + "Game"
         let directory = fileManager.currentDirectoryPath
         try fileManager.createDirectory(atPath: directory + "/Sources/\(executableName)", withIntermediateDirectories: true)
         fileManager.createFile(atPath: directory + "/Sources/\(executableName)/main.swift", contents: try DataFactory.makeExecutableFileData(projectName: projectName))
+        let libraryResourcesDirectory = directory + "/Sources/\(executableName)/Resources"
+        try fileManager.createDirectory(atPath: libraryResourcesDirectory, withIntermediateDirectories: true)
     }
 
     static func createPackageFile(projectName: String) throws {

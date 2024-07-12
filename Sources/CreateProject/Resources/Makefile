@@ -38,5 +38,8 @@ open:
 	$(GODOT) $(GODOT_PROJECT_FILE_PATH)
 
 .PHONY: pack
-pack: open # open first to make sure all resources are imported
+pack:
+	@echo "Going to open Godot to ensure all resources are imported."
+	$(GODOT) $(GODOT_PROJECT_FILE_PATH) --quit
+	@echo "Exporting the .pck file"
 	$(GODOT) --headless --path $(GODOT_PROJECT_DIRECTORY) --export-pack Packer ../Sources/$(LIBRARY_NAME)Game/Resources/$(LIBRARY_NAME).pck

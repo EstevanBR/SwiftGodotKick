@@ -11,7 +11,7 @@ enum DataFactory {
         export GODOT_PROJECT_DIRECTORY=\(godotProjectDirectory)
         export GODOT_PROJECT_FILE_PATH=$(GODOT_PROJECT_DIRECTORY)/project.godot
         export GODOT_BIN_PATH=$(GODOT_PROJECT_DIRECTORY)/bin
-        export BUILD_PATH=./build
+        export BUILD_PATH=./.build
         export LIBRARY_NAME=$(PROJECT_NAME)
         export EXECUTABLE_NAME=$(PROJECT_NAME)Game
 

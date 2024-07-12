@@ -31,11 +31,11 @@ private struct CreateProject {
         
         try FileFactory.createProjectDirectory(atPath: projectPath)
         try FileFactory.createEnvFile(projectName: projectName, godotPath: godotPath)
+        
         try FileFactory.createSourcesDirectory()
         try FileFactory.createLibraryTarget(projectName: projectName)
+        try FileFactory.createExecutableTarget(projectName: projectName)
 
-        let executableName = projectName + "Game"
-        try FileFactory.createExecutableTarget(projectName: projectName, executableName: executableName)
         try FileFactory.createPackageFile(projectName: projectName)
 
         try FileFactory.copyMakefile()
