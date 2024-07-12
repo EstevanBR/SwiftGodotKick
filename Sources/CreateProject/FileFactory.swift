@@ -26,6 +26,8 @@ enum FileFactory {
         let librarySourceFile = libraryDirectory + "/" + projectName + ".swift"
         try fileManager.createDirectory(atPath: libraryDirectory, withIntermediateDirectories: true)
         try fileManager.createFile(atPath: librarySourceFile, contents: try DataFactory.makeLibraryFileData(), replace: false)
+        let libraryResourcesDirectory = directory + "/Sources/\(projectName)/Resources"
+        try fileManager.createDirectory(atPath: libraryResourcesDirectory, withIntermediateDirectories: true)
     }
 
     static func createExecutableTarget(projectName: String, executableName: String) throws {

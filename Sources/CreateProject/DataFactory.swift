@@ -1,14 +1,11 @@
 import Foundation
 
 enum DataFactory {
-    private enum Error: Swift.Error, LocalizedError {
-        case noData
-    }
-
     static func makeEnvFileData(projectName: String, godotPath: String) throws -> Data {
         let directory = fileManager.currentDirectoryPath
         let godotProjectDirectory = directory + "/godot"
-        guard let data = """
+        return try
+        """
         export PROJECT_NAME=\(projectName)
         export GODOT=\(godotPath)
         export GODOT_PROJECT_DIRECTORY=\(godotProjectDirectory)
@@ -18,12 +15,13 @@ enum DataFactory {
         export LIBRARY_NAME=$(PROJECT_NAME)
         export EXECUTABLE_NAME=$(PROJECT_NAME)Game
 
-        """.data(using: .utf8) else { throw Error.noData }
-        return data
+        """
+        .utf8Data
     }
 
     static func makePackageFileData(projectName: String) throws -> Data {
-        guard let data = """
+        try
+        """
         // swift-tools-version: 5.9
 
         import PackageDescription
@@ -49,6 +47,9 @@ enum DataFactory {
                     dependencies: [
                         "\(projectName)",
                         .product(name: "SwiftGodotKit", package: "SwiftGodotKit")
+                    ],
+                    resources: [
+                        .copy("Resources")
                     ]),
                 .target(
                     name: "\(projectName)",
@@ -58,12 +59,13 @@ enum DataFactory {
             ]
         )
 
-        """.data(using: .utf8) else { throw Error.noData }
-        return data
+        """
+        .utf8Data
     }
 
     static func makeLibraryFileData() throws -> Data {
-        guard let data = """
+        try
+        """
         import SwiftGodot
 
         #warning("Remove this HelloWorld class")
@@ -80,12 +82,13 @@ enum DataFactory {
 
         #initSwiftExtension(cdecl: "swift_entry_point", types: godotTypes)
 
-        """.data(using: .utf8) else { throw Error.noData }
-        return data
+        """
+        .utf8Data
     }
 
     static func makeExecutableFileData(projectName: String) throws -> Data {
-        guard let data = """
+        try
+        """
         import \(projectName)
         import SwiftGodot
         import SwiftGodotKit
@@ -103,8 +106,6 @@ enum DataFactory {
             }
         }
 
-        print("א")
-
         runGodot(
             args: [],
             initHook: registerTypes,
@@ -112,12 +113,13 @@ enum DataFactory {
             loadProjectSettings: { settings in }
         )
 
-        """.data(using: .utf8) else { throw Error.noData }
-        return data
+        """
+        .utf8Data
     }
 
     static func makeGodotProjectFileData(projectName: String) throws -> Data {
-        guard let data = """
+        try
+        """
         ; Engine configuration file.
         ; It's best edited using the editor UI and not directly,
         ; since the parameters that go here are not all obvious.
@@ -130,15 +132,16 @@ enum DataFactory {
 
         [application]
 
-        config/name="Example22"
+        config/name="\(projectName)"
         config/features=PackedStringArray("4.2")
         
-        """.data(using: .utf8) else { throw Error.noData }
-        return data
+        """
+        .utf8Data
     }
 
     static func makeGDExtensionFileData(projectName: String) throws -> Data {
-        guard let data = """
+        try
+        """
         [configuration]
         entry_symbol = "swift_entry_point"
         compatibility_minimum = 4.2
@@ -161,12 +164,13 @@ enum DataFactory {
         android.debug.arm64 = "res://bin/lib\(projectName).so"
         android.release.arm64 = "res://bin/lib\(projectName).so"
         
-        """.data(using: .utf8) else { throw Error.noData }
-        return data
+        """
+        .utf8Data
     }
 
     static func makeExportPresetsFileData(projectName: String) throws -> Data {
-        guard let data = """
+        try
+        """
         [preset.0]
 
         name="Packer"
@@ -205,7 +209,20 @@ enum DataFactory {
         progressive_web_app/icon_180x180=""
         progressive_web_app/icon_512x512=""
         progressive_web_app/background_color=Color(0, 0, 0, 1)
-        """.data(using: .utf8) else { throw Error.noData }
-        return data
+        """
+        .utf8Data
+    }
+}
+
+private extension String {
+    private enum Error: Swift.Error, LocalizedError {
+        case noData
+    }
+
+    var utf8Data: Data {
+        get throws {
+            guard let data = self.data(using: .utf8) else { throw Error.noData }
+            return data
+        }
     }
 }
