@@ -16,4 +16,5 @@ mono_crash.*.json
 
 # gdextension files
 bin/
+exports/
 

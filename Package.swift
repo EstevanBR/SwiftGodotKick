@@ -5,7 +5,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "SwiftGodotKitProjectCreator",
+    name: "SwiftGodotKick",
     products: [
         .executable(
             name: "CreateProject",

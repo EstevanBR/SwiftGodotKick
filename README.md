@@ -1,4 +1,4 @@
-`SwiftGodotKitProjectCreator` is a program that creates the start of a SwiftGodot + SwiftGodotKit project.
+`SwiftGodotKick` is a program that creates the start of a SwiftGodot + SwiftGodotKit project.
 
 ### Initial setup
 Just run this:

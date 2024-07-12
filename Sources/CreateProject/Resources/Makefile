@@ -37,3 +37,6 @@ run:
 open:
 	$(GODOT) $(GODOT_PROJECT_FILE_PATH)
 
+.PHONY: pack
+pack: open # open first to make sure all resources are imported
+	$(GODOT) --headless --path $(GODOT_PROJECT_DIRECTORY) --export-pack Packer ../Sources/$(LIBRARY_NAME)Game/Resources/$(LIBRARY_NAME).pck
