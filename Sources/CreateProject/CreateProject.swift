@@ -15,36 +15,34 @@ private struct CreateProject {
     }
 
     static func main() throws {
-        let projectPath = try UserChoice.get(message: "Where would you like this project to be created?: ")
-        let projectName = try UserChoice.get(message: "Please enter your project name: ")
+        let projectParentDirectoryPath = try UserChoice.get(message: "Please enter where you would like the project directory to be created: ")
+        let projectName = try UserChoice.get(message: "Please enter the name of the project: ")
         
         let godotPath: String = switch ProcessInfo.processInfo.environment["GODOT"] {
             case .some(let value): value
             case .none: try UserChoice.get(message: "Please enter the full path to the Godot 4.2 executable: ")
         }
 
-        try FileFactory.createProjectDirectory(atPath: projectPath)
+        let projectPath = try FileFactory.createProjectDirectory(atPath: projectParentDirectoryPath, projectName: projectName)
 
         guard fileManager.changeCurrentDirectoryPath(projectPath) else {
             throw Error.invalidProjectPath(projectPath)
         }
-        
-        try FileFactory.createProjectDirectory(atPath: projectPath)
-        try FileFactory.createEnvFile(projectName: projectName, godotPath: godotPath)
-        
-        try FileFactory.createSourcesDirectory()
-        try FileFactory.createLibraryTarget(projectName: projectName)
-        try FileFactory.createExecutableTarget(projectName: projectName)
 
-        try FileFactory.createPackageFile(projectName: projectName)
+        print("Created \(try FileFactory.createPackageFile(projectName: projectName))")
+        print("Created \(try FileFactory.copyReadmeFile())")
+        print("Created \(try FileFactory.copyGitIgnoreFile())")
+        print("Created \(try FileFactory.createEnvFile(projectName: projectName, godotPath: godotPath))")
+        print("Created \(try FileFactory.createSourcesDirectory())")
+        print("Created \(try FileFactory.createLibraryTarget(projectName: projectName))")
+        print("Created \(try FileFactory.createExecutableTarget(projectName: projectName))")
+        print("Created \(try FileFactory.copyGDDFile())")
+        print("Created \(try FileFactory.copyGodotDirectory())")
+        print("Created \(try FileFactory.createGodotProjectFile(projectName: projectName))")
+        print("Created \(try FileFactory.createGDExtensionFile(projectName: projectName))")
+        print("Created \(try FileFactory.createExportPresetsFile(projectName: projectName))")
+        print("Created \(try FileFactory.copyMakefile())")
 
-        try FileFactory.copyMakefile()
-        try FileFactory.copyGDDFile()
-        try FileFactory.copyGitIgnoreFile()
-        try FileFactory.copyGodotDirectory()
-        try FileFactory.createGodotProjectFile(projectName: projectName)
-        try FileFactory.createGDExtensionFile(projectName: projectName)
-        try FileFactory.copyReadmeFile()
-        try FileFactory.createExportPresetsFile(projectName: projectName)
+        print("\n run `$ cd \(fileManager.currentDirectoryPath) && make all`")
     }
 }

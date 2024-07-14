@@ -96,7 +96,7 @@ enum DataFactory {
         .utf8Data
     }
 
-    static func makeExecutableFileData(projectName: String) throws -> Data {
+    static func makeMainFileData(projectName: String) throws -> Data {
         try
         """
         import Foundation

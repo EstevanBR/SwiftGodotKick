@@ -1,10 +1,7 @@
 include .env
 
 .PHONY: all
-all: paths build deploy
-
-.PHONY: setup
-setup: paths
+all: paths build pack deploy
 
 .PHONY: paths
 paths:
