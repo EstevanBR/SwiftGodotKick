@@ -43,6 +43,10 @@ private struct CreateProject {
         print("Created \(try FileFactory.createExportPresetsFile(projectName: projectName))")
         print("Created \(try FileFactory.copyMakefile())")
 
-        print("\n run `$ cd \(fileManager.currentDirectoryPath) && make all`")
+        print("""
+        run the following command:
+        
+        cd \(fileManager.currentDirectoryPath) && make all
+        """)
     }
 }

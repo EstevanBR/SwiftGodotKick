@@ -1,10 +1,17 @@
 import Foundation
 
 enum FileFactory {
-    private enum Error: Swift.Error {
-        case couldNotCreateFile
-        case couldNotCopyFile
-        case badURL
+    private enum Error: Swift.Error, LocalizedError {
+        case couldNotCreateFile(path: String)
+        case noURLForResource(resource: String, extension: String?)
+
+        var errorDescription: String? {
+            switch self {
+                case .couldNotCreateFile(let path): "Could not create file: \(path)"
+                case let .noURLForResource(resource, .none): "Could not create URL for resource: \(resource)"
+                case let .noURLForResource(resource, .some(ext)): "Could not create URL for resource: \(resource).\(ext)"
+            }
+        }
     }
 
     static func createProjectDirectory(atPath path: String, projectName: String) throws -> String {
@@ -60,7 +67,7 @@ enum FileFactory {
         let path = directory + "/Package.swift"
         let data = try DataFactory.makePackageFileData(projectName: projectName)
         guard fileManager.createFile(atPath: path, contents: data) else {
-            throw Error.couldNotCreateFile
+            throw Error.couldNotCreateFile(path: path)
         }
         return path
     }
@@ -70,7 +77,7 @@ enum FileFactory {
         let path = directory + "/godot/project.godot"
         let data = try DataFactory.makeGodotProjectFileData(projectName: projectName)
         guard fileManager.createFile(atPath: path, contents: data) else {
-            throw Error.couldNotCreateFile
+            throw Error.couldNotCreateFile(path: path)
         }
         return path
     }
@@ -80,7 +87,7 @@ enum FileFactory {
         let path = directory + "/godot/\(projectName).gdextension"
         let data = try DataFactory.makeGDExtensionFileData(projectName: projectName)
         guard fileManager.createFile(atPath: path, contents: data) else {
-            throw Error.couldNotCreateFile
+            throw Error.couldNotCreateFile(path: path)
         }
         return path
     }
@@ -90,14 +97,14 @@ enum FileFactory {
         let data = try DataFactory.makeExportPresetsFileData(projectName: projectName)
         let path = directory + "/godot/export_presets.cfg"
         guard fileManager.createFile(atPath: path, contents: data) else {
-            throw Error.couldNotCreateFile
+            throw Error.couldNotCreateFile(path: path)
         }
         return path
     }
 
     static func copyMakefile() throws -> String {
         guard let url = Bundle.module.url(forResource: "Makefile", withExtension: nil) else {
-            throw Error.badURL
+            throw Error.noURLForResource(resource: "Makefile", extension: nil)
         }
         let directory = fileManager.currentDirectoryPath
         let destinationPath = directory + "/Makefile"
@@ -106,8 +113,8 @@ enum FileFactory {
     }
 
     static func copyGDDFile() throws -> String {
-        guard let url = Bundle.module.url(forResource: "GDD.md", withExtension: nil) else {
-            throw Error.badURL
+        guard let url = Bundle.module.url(forResource: "GDD", withExtension: "md") else {
+            throw Error.noURLForResource(resource: "Makefile", extension: "md")
         }
         let directory = fileManager.currentDirectoryPath
         let destinationPath = directory + "/GDD.md"
@@ -117,7 +124,7 @@ enum FileFactory {
 
     static func copyGitIgnoreFile() throws -> String {
         guard let url = Bundle.module.url(forResource: ".gitignore", withExtension: nil) else {
-            throw Error.badURL
+            throw Error.noURLForResource(resource: ".gitignore", extension: nil)
         }
         let directory = fileManager.currentDirectoryPath
         let destinationPath = directory + "/.gitignore"
@@ -127,7 +134,7 @@ enum FileFactory {
 
     static func copyGodotDirectory() throws -> String {
         guard let url = Bundle.module.url(forResource: "godot", withExtension: nil) else {
-            throw Error.badURL
+            throw Error.noURLForResource(resource: "godot", extension: nil)
         }
         let directory = fileManager.currentDirectoryPath
         
@@ -137,8 +144,8 @@ enum FileFactory {
     }
 
     static func copyReadmeFile() throws -> String {
-        guard let url = Bundle.module.url(forResource: "README.md", withExtension: nil) else {
-            throw Error.badURL
+        guard let url = Bundle.module.url(forResource: "README", withExtension: "md") else {
+            throw Error.noURLForResource(resource: "README", extension: "md")
         }
         let directory = fileManager.currentDirectoryPath
         let destinationPath = directory + "/README.md"
