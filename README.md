@@ -8,14 +8,13 @@ $ swift run CreateProject
 
 and follow the prompts.
 
-For example.
+IMPORTANT:
 
-When it asks which directory, this is the directory that your project folder will be created in, so it's asking for the parent directory of your project. I may change this later. for example `swift package init` will put the `Package.swift` file in the current working directory, this tool will create a folder first.
+When it asks which directory, this is the directory that your project folder will be created in, so it's asking for the parent directory of your project. I may change this later. for example `swift package init` will put the `Package.swift` file in the current working directory, but this tool will create a folder first.
 
 ### Example output
-```shell
-$ swift run
-Building for debugging...
+```
+$ swift run CreateProject
 
 Please enter where you would like the project directory to be created: ../
 Please enter the name of the project: MySwiftGodotKickProject
