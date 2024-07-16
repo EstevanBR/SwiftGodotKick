@@ -234,6 +234,10 @@ enum DataFactory {
 private extension String {
     private enum Error: Swift.Error, LocalizedError {
         case noData
+
+        var errorDescription: String? {
+            "Could not get utf8 data from string"
+        }
     }
 
     var utf8Data: Data {
