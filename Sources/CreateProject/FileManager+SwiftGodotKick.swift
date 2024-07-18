@@ -9,9 +9,15 @@ extension FileManager {
     }
 
     func createFile(atPath path: String, contents data: Data, replace: Bool) throws {
-        if replace == false, fileManager.fileExists(atPath: path) {
+        if replace == false, FileManager().fileExists(atPath: path) {
             throw FileAlreadyExistsError(path: path)
         }
         createFile(atPath: path, contents: data)
+    }
+
+    func directoryExists(atPath path: String) -> (exists: Bool, isDirectory: Bool) {
+        var isDirectory = ObjCBool(booleanLiteral: false)
+
+        return (exists: fileExists(atPath: path, isDirectory: &isDirectory), isDirectory: isDirectory.boolValue)
     }
 }

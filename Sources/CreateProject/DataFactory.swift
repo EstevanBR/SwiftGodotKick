@@ -2,7 +2,7 @@ import Foundation
 
 enum DataFactory {
     static func makeEnvFileData(projectName: String, godotPath: String) throws -> Data {
-        let directory = fileManager.currentDirectoryPath
+        let directory = FileManager().currentDirectoryPath
         let godotProjectDirectory = directory + "/godot"
         return try
         """
