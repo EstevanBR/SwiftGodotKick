@@ -14,6 +14,8 @@ enum FileFactory {
         }
     }
 
+    private static let fileManager = FileManager()
+
     static func createProjectDirectory(atPath path: String, projectName: String) throws -> String {
         let projectDirectoryPath = path + (path.last == "/" ? "" : "/") + projectName
         try fileManager.createDirectory(atPath: projectDirectoryPath, withIntermediateDirectories: true)

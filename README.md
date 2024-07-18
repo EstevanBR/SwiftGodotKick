@@ -64,13 +64,13 @@ This will create a project with this structure:
 ```
 
 ### Using resources:
-As long as we import all our resources into Godot, we can reference them in `Swift` using the same `res://` paths as you would in `GDScript` by exporting the Resource .pck file, and passing it to Godot when we start the project using `SwiftGodotKit`.
+As long as we import all our resources into Godot, we can reference them in Swift using the same `res://` paths as you would in GDScript by exporting the Resource .pck file, and passing it to Godot when we run Godot using SwiftGodotKit.
 
 The `godot/export_presets.cfg` file is used by `make pack` to create the `Sources/MySwiftGodotKickProjectGame/Resources/MySwiftGodotKickProject.pck` resource pack.
 
-This allows both `.gdscript` and swift code to access `icon.svg` by using `res://icon.svg` (check out `main.swift`).
+IMPORTANT: You must have the export templates downloaded.
 
-By putting the `MySwiftGodotKickProject.pck` resource file in the `Resources/` folder of the Swift Package target, and declaring that Resource as a resource in the Package.swift manifest like so:
+Ultimately, this allows both `.gdscript` and Swift code to access a resource like: `icon.svg` by using `res://icon.svg` by putting the `MySwiftGodotKickProject.pck` resource file in the `Resources/` folder of the Swift Package target, and declaring that Resource as a resource in the `Package.swift` manifest like so:
 ```swift
 let package = Package(
     ...

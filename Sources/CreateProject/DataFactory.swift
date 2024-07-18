@@ -2,7 +2,7 @@ import Foundation
 
 enum DataFactory {
     static func makeEnvFileData(projectName: String, godotPath: String) throws -> Data {
-        let directory = fileManager.currentDirectoryPath
+        let directory = FileManager().currentDirectoryPath
         let godotProjectDirectory = directory + "/godot"
         return try
         """
@@ -38,8 +38,8 @@ enum DataFactory {
                     targets: ["\(projectName)"]),
             ],
             dependencies: [
-                .package(url: "https://github.com/EstevanBR/SwiftGodot", branch: "estevanBR"),
-                .package(url: "https://github.com/EstevanBR/SwiftGodotKit", branch: "estevanBR")
+                .package(url: "https://github.com/migueldeicaza/SwiftGodot", revision: "fe24cb01640c2d4d48c8555a71adfe346d9543cf"),
+                .package(url: "https://github.com/migueldeicaza/SwiftGodotKit", branch: "main")
             ],
             targets: [
                 .executableTarget(
