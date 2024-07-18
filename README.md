@@ -70,9 +70,7 @@ The `godot/export_presets.cfg` file is used by `make pack` to create the `Source
 
 IMPORTANT: You must have the export templates downloaded.
 
-Ultimately, this allows both `.gdscript` and Swift code to access a resource like: `icon.svg` by using `res://icon.svg`.
-
-By putting the `MySwiftGodotKickProject.pck` resource file in the `Resources/` folder of the Swift Package target, and declaring that Resource as a resource in the `Package.swift` manifest like so:
+Ultimately, this allows both `.gdscript` and Swift code to access a resource like: `icon.svg` by using `res://icon.svg` by putting the `MySwiftGodotKickProject.pck` resource file in the `Resources/` folder of the Swift Package target, and declaring that Resource as a resource in the `Package.swift` manifest like so:
 ```swift
 let package = Package(
     ...
