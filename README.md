@@ -16,24 +16,26 @@ When it asks which directory, this is the directory that your project folder wil
 ```
 $ swift run CreateProject
 
-Please enter where you would like the project directory to be created: ../
-Please enter the name of the project: MySwiftGodotKickProject
-Created /home/user/Documents/Code/MySwiftGodotKickProject/Package.swift
-Created /home/user/Documents/Code/MySwiftGodotKickProject/README.md
-Created /home/user/Documents/Code/MySwiftGodotKickProject/.gitignore
-Created /home/user/Documents/Code/MySwiftGodotKickProject/.env
-Created /home/user/Documents/Code/MySwiftGodotKickProject/Sources
-Created /home/user/Documents/Code/MySwiftGodotKickProject/Sources/MySwiftGodotKickProject/MySwiftGodotKickProject.swift
-Created /home/user/Documents/Code/MySwiftGodotKickProject/Sources/MySwiftGodotKickProjectGame/main.swift
-Created /home/user/Documents/Code/MySwiftGodotKickProject/GDD.md
-Created /home/user/Documents/Code/MySwiftGodotKickProject/godot
-Created /home/user/Documents/Code/MySwiftGodotKickProject/godot/project.godot
-Created /home/user/Documents/Code/MySwiftGodotKickProject/godot/MySwiftGodotKickProject.gdextension
-Created /home/user/Documents/Code/MySwiftGodotKickProject/godot/export_presets.cfg
-Created /home/user/Documents/Code/MySwiftGodotKickProject/Makefile
+Please enter where you would like the project directory to be created: ../KickExampleProject
+There is no directory at path: ../KickExampleProject, would you like to create it? (y/n): y
+Please enter the name of the project: KickExampleProject
+Project will be created at: /home/user/Documents/Code/Swift/KickExampleProject/Package.swift, would you like to proceed? (y/n): y
+Created /home/user/Documents/Code/Swift/KickExampleProject/Package.swift
+Created /home/user/Documents/Code/Swift/KickExampleProject/README.md
+Created /home/user/Documents/Code/Swift/KickExampleProject/.gitignore
+Created /home/user/Documents/Code/Swift/KickExampleProject/.env
+Created /home/user/Documents/Code/Swift/KickExampleProject/Sources
+Created /home/user/Documents/Code/Swift/KickExampleProject/Sources/KickExampleProject/KickExampleProject.swift
+Created /home/user/Documents/Code/Swift/KickExampleProject/Sources/KickExampleProjectGame/main.swift
+Created /home/user/Documents/Code/Swift/KickExampleProject/GDD.md
+Created /home/user/Documents/Code/Swift/KickExampleProject/godot
+Created /home/user/Documents/Code/Swift/KickExampleProject/godot/project.godot
+Created /home/user/Documents/Code/Swift/KickExampleProject/godot/KickExampleProject.gdextension
+Created /home/user/Documents/Code/Swift/KickExampleProject/godot/export_presets.cfg
+Created /home/user/Documents/Code/Swift/KickExampleProject/Makefile
 run the following command:
 
-cd /home/user/Documents/Code/MySwiftGodotKickProject && make all
+cd /home/user/Documents/Code/Swift/KickExampleProject && make all
 ```
 
 This will create a project with this structure:
