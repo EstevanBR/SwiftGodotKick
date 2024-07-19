@@ -8,10 +8,6 @@ $ swift run CreateProject
 
 and follow the prompts.
 
-IMPORTANT:
-
-When it asks which directory, this is the directory that your project folder will be created in, so it's asking for the parent directory of your project. I may change this later. for example `swift package init` will put the `Package.swift` file in the current working directory, but this tool will create a folder first.
-
 ### Example output
 ```
 $ swift run CreateProject
