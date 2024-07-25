@@ -8,7 +8,7 @@ let package = Package(
     name: "SwiftGodotKick",
     products: [
         .executable(
-            name: "CreateProject",
+            name: "swift-godot-kick",
             targets: ["CreateProject"]),
     ],
     targets: [
