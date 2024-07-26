@@ -5,13 +5,15 @@ private struct CreateProject {
     static let fileManager = FileManager()
 
     static func main() throws {
+        print("Arguments:", ProcessInfo.processInfo.arguments.joined(separator: ", "))
+        print("currentDirectoryPath:", FileManager().currentDirectoryPath)
         do {
             let projectPath: String = try UserChoice.get(message: "Please enter where you would like the project directory to be created: ")
 
             let (projectPathExists, projectPathIsDirectory) = fileManager.directoryExists(atPath: projectPath)
             
             if !projectPathExists, !projectPathIsDirectory {
-                if try UserChoice.getBool(message: Color.yellow.rawValue + "There is no directory at path: \(projectPath), would you like to create it?" + Color.reset.rawValue) {
+                if try UserChoice.getBool(message: Color.yellow + "There is no directory at path: \(projectPath), would you like to create it?") {
                     try fileManager.createDirectory(atPath: projectPath, withIntermediateDirectories: true)
                 } else {
                     print("Goodbye")
@@ -24,8 +26,7 @@ private struct CreateProject {
             }
 
             let projectName: String = try UserChoice.get(message: "Please enter the name of the project: ")
-
-            let contents = try fileManager.contentsOfDirectory(atPath: projectPath)
+            let contents = try fileManager.contentsOfDirectory(atPath: fileManager.currentDirectoryPath)
             guard contents.isEmpty else {
                 print(color: .red, "Directory at \(projectPath) must be empty, but found: \(contents.joined(separator: ", "))")
                 exit(1)
@@ -43,8 +44,8 @@ private struct CreateProject {
             }
 
             let godotPath: String = switch ProcessInfo.processInfo.environment["GODOT"] {
-                case .some(let value): value
-                case .none: try UserChoice.get(message: "Please enter the full path to the Godot 4.2 executable: ")
+                case .some(let value) where value.isEmpty == false: value
+                default: try UserChoice.get(message: Color.yellow + "GODOT not set\n" + "Please enter the full path to the Godot 4.2 executable: ")
             }
 
             print(color: .green, "Created \(try FileFactory.createPackageFile(projectName: projectName))")
@@ -80,5 +81,5 @@ private struct CreateProject {
 }
 
 func print(color: Color, _ message: String) {
-    print(color.rawValue + message + Color.reset.rawValue)
+    print(color + message)
 }

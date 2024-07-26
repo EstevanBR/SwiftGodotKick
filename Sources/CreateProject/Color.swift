@@ -8,4 +8,17 @@ enum Color: String {
     case magenta = "\u{001B}[0;35m"
     case cyan = "\u{001B}[0;36m"
     case white = "\u{001B}[0;37m"
+
+    case bgBlack = "\u{001B}[0;40m"
+    case bgRed = "\u{001B}[0;41m"
+    case bgGreen = "\u{001B}[0;42m"
+    case bgYellow = "\u{001B}[0;43m"
+    case bgBlue = "\u{001B}[0;44m"
+    case bgMagenta = "\u{001B}[0;45m"
+    case bgCyan = "\u{001B}[0;46m"
+    case bgWhite = "\u{001B}[0;47m"
+
+    static func +(color: Color, text: String) -> String {
+        return color.rawValue + text + Color.reset.rawValue
+    }
 }
