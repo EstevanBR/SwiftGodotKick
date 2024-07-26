@@ -5,8 +5,6 @@ private struct CreateProject {
     static let fileManager = FileManager()
 
     static func main() throws {
-        print("Arguments:", ProcessInfo.processInfo.arguments.joined(separator: ", "))
-        print("currentDirectoryPath:", FileManager().currentDirectoryPath)
         do {
             let projectPath: String = try UserChoice.get(message: "Please enter where you would like the project directory to be created: ")
 
