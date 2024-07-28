@@ -28,6 +28,7 @@ enum DataFactory {
 
         let package = Package(
             name: "\(projectName)",
+            platforms: [.macOS(.v13)],
             products: [
                 .executable(
                     name: "\(projectName)Game",
