@@ -104,14 +104,14 @@ enum FileFactory {
         return path
     }
 
-    static func copyMakefile() throws -> String {
-        guard let url = Bundle.module.url(forResource: "Makefile", withExtension: nil) else {
-            throw Error.noURLForResource(resource: "Makefile", extension: nil)
-        }
+    static func createMakefile(projectName: String) throws -> String {
         let directory = fileManager.currentDirectoryPath
-        let destinationPath = directory + "/Makefile"
-        try fileManager.copyItem(atPath: url.path, toPath: destinationPath)
-        return destinationPath
+        let data = try DataFactory.makeMakefile(projectName: projectName)
+        let path = directory + "/Makefile"
+        guard fileManager.createFile(atPath: path, contents: data) else {
+            throw Error.couldNotCreateFile(path: path)
+        }
+        return path
     }
 
     static func copyGDDFile() throws -> String {

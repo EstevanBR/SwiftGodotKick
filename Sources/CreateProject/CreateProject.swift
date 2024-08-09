@@ -58,7 +58,7 @@ private struct CreateProject {
             print(color: .green, "Created \(try FileFactory.createGodotProjectFile(projectName: projectName))")
             print(color: .green, "Created \(try FileFactory.createGDExtensionFile(projectName: projectName))")
             print(color: .green, "Created \(try FileFactory.createExportPresetsFile(projectName: projectName))")
-            print(color: .green, "Created \(try FileFactory.copyMakefile())")
+            print(color: .green, "Created \(try FileFactory.createMakefile(projectName: projectName))")
         } catch let error as LocalizedError {
             print(color: .red, "Error: \(error.errorDescription ?? error.localizedDescription)")
             if let recoverySuggestion = error.recoverySuggestion {
