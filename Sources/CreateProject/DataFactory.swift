@@ -165,22 +165,22 @@ enum DataFactory {
         compatibility_minimum = 4.2
 
         [libraries]
-        macos.debug = "res://bin/lib\(projectName).so"
-        macos.release = "res://bin/lib\(projectName).so"
-        windows.debug.x86_32 = "res://bin/lib\(projectName).so"
-        windows.release.x86_32 = "res://bin/lib\(projectName).so"
-        windows.debug.x86_64 = "res://bin/lib\(projectName).so"
-        windows.release.x86_64 = "res://bin/lib\(projectName).so"
-        linux.debug.x86_64 = "res://bin/lib\(projectName).so"
-        linux.release.x86_64 = "res://bin/lib\(projectName).so"
-        linux.debug.arm64 = "res://bin/lib\(projectName).so"
-        linux.release.arm64 = "res://bin/lib\(projectName).so"
-        linux.debug.rv64 = "res://bin/lib\(projectName).so"
-        linux.release.rv64 = "res://bin/lib\(projectName).so"
-        android.debug.x86_64 = "res://bin/lib\(projectName).so"
-        android.release.x86_64 = "res://bin/lib\(projectName).so"
-        android.debug.arm64 = "res://bin/lib\(projectName).so"
-        android.release.arm64 = "res://bin/lib\(projectName).so"
+        macos.debug = "res://bin/lib\(projectName).\(arch.dynamicExtension)"
+        macos.release = "res://bin/lib\(projectName).\(arch.dynamicExtension)"
+        windows.debug.x86_32 = "res://bin/lib\(projectName).\(arch.dynamicExtension)"
+        windows.release.x86_32 = "res://bin/lib\(projectName).\(arch.dynamicExtension)"
+        windows.debug.x86_64 = "res://bin/lib\(projectName).\(arch.dynamicExtension)"
+        windows.release.x86_64 = "res://bin/lib\(projectName).\(arch.dynamicExtension)"
+        linux.debug.x86_64 = "res://bin/lib\(projectName).\(arch.dynamicExtension)"
+        linux.release.x86_64 = "res://bin/lib\(projectName).\(arch.dynamicExtension)"
+        linux.debug.arm64 = "res://bin/lib\(projectName).\(arch.dynamicExtension)"
+        linux.release.arm64 = "res://bin/lib\(projectName).\(arch.dynamicExtension)"
+        linux.debug.rv64 = "res://bin/lib\(projectName).\(arch.dynamicExtension)"
+        linux.release.rv64 = "res://bin/lib\(projectName).\(arch.dynamicExtension)"
+        android.debug.x86_64 = "res://bin/lib\(projectName).\(arch.dynamicExtension)"
+        android.release.x86_64 = "res://bin/lib\(projectName).\(arch.dynamicExtension)"
+        android.debug.arm64 = "res://bin/lib\(projectName).\(arch.dynamicExtension)"
+        android.release.arm64 = "res://bin/lib\(projectName).\(arch.dynamicExtension)"
         
         """
         .utf8Data
@@ -229,6 +229,80 @@ enum DataFactory {
         progressive_web_app/background_color=Color(0, 0, 0, 1)
         """
         .utf8Data
+    }
+
+    static func makeMakefile(projectName: String) throws -> Data {
+        try """
+        include .env
+
+        .PHONY: all
+        all: paths build deploy pack
+
+        .PHONY: paths
+        paths:
+        	@echo "Path to Godot executable:\\n\\t$(GODOT)"
+        	@echo "Godot bin/ path:\\n\\t$(GODOT_BIN_PATH)"
+        	@echo "Build path:\\n\\t$(BUILD_PATH)"
+        	@echo "Godot version:\\n\\t`$(GODOT) --version`"
+        	@echo "Library name:\\n\\t$(LIBRARY_NAME)"
+        	@echo "Executable name:\\n\\t$(EXECUTABLE_NAME)"
+        	@echo "Godot project file path:\\n\\t$(GODOT_PROJECT_FILE_PATH)"
+
+        .PHONY: build
+        build:
+        	mkdir -p $(BUILD_PATH)
+        	swift build --product $(LIBRARY_NAME) --build-path $(BUILD_PATH)
+        	swift build --product $(EXECUTABLE_NAME) --build-path $(BUILD_PATH)
+
+        .PHONY: deploy
+        deploy:
+        	rm -rf $(GODOT_BIN_PATH)
+        	mkdir -p $(GODOT_BIN_PATH)
+
+        	cp $(BUILD_PATH)/debug/libSwiftGodot.\(arch.dynamicExtension) $(GODOT_BIN_PATH)
+        	cp $(BUILD_PATH)/debug/lib\(projectName).\(arch.dynamicExtension) $(GODOT_BIN_PATH)
+
+        .PHONY: run
+        run:
+        	swift run $(EXECUTABLE_NAME) --build-path $(BUILD_PATH)
+
+        .PHONY: open
+        open:
+        	$(GODOT) $(GODOT_PROJECT_FILE_PATH)
+
+        .PHONY: pack
+        pack:
+        	@echo "Going to open Godot to ensure all resources are imported."
+        	-$(GODOT) $(GODOT_PROJECT_FILE_PATH) --headless --quit
+        	@echo "Exporting the .pck file"
+        	$(GODOT) --headless --path $(GODOT_PROJECT_DIRECTORY) --export-pack Packer ../Sources/$(LIBRARY_NAME)Game/Resources/$(LIBRARY_NAME).pck
+
+        """
+        .utf8Data
+    }
+}
+
+private enum Architecture {
+    case x86_64
+    case arm64
+
+    var dynamicExtension: String {
+        switch self {
+            case .x86_64: "so"
+            case .arm64: "dylib"
+        }
+    }
+}
+
+private extension DataFactory {
+    static var arch: Architecture {
+        #if arch(x86_64)
+        .x86_64
+        #elseif arch(arm64)
+        .arm64
+        #else
+        fatalError("Unknown architecture")
+        #endif
     }
 }
 
