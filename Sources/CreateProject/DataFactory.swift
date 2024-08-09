@@ -282,13 +282,20 @@ enum DataFactory {
     }
 }
 
-private enum Arch {
+private enum Architecture {
     case x86_64
     case arm64
+
+    var dynamicExtension: String {
+        switch self {
+            case .x86_64: "so"
+            case .arm64: "dylib"
+        }
+    }
 }
 
 private extension DataFactory {
-    static var arch: Arch {
+    static var arch: Architecture {
         #if arch(x86_64)
         .x86_64
         #elseif arch(arm64)
@@ -296,15 +303,6 @@ private extension DataFactory {
         #else
         fatalError("Unknown architecture")
         #endif
-    }
-}
-
-private extension Arch {
-    var dynamicExtension: String {
-        switch self {
-            case .x86_64: "so"
-            case .arm64: "dylib"
-        }
     }
 }
 
