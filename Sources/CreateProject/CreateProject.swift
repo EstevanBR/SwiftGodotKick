@@ -1,12 +1,15 @@
 import Foundation
 
+let version = "2.2.0"
+
 @main
 private struct CreateProject {
-    static let fileManager = FileManager()
-
     static func main() throws {
+        checkHelp()
+        checkShowVersion()
+
         do {
-            let projectPath: String = try UserChoice.get(message: "Please enter where you would like the project directory to be created: ")
+            let projectPath = try getProjectPath()
 
             let (projectPathExists, projectPathIsDirectory) = fileManager.directoryExists(atPath: projectPath)
             
@@ -23,14 +26,15 @@ private struct CreateProject {
                 throw ChangeDirectoryError(path: projectPath)
             }
 
-            let projectName: String = try UserChoice.get(message: "Please enter the name of the project: ")
+            let projectName = try getProjectName()
+
             let contents = try fileManager.contentsOfDirectory(atPath: fileManager.currentDirectoryPath)
             guard contents.isEmpty else {
                 print(color: .red, "Directory at \(projectPath) must be empty, but found: \(contents.joined(separator: ", "))")
                 exit(1)
             }
 
-            let executableName: String = try UserChoice.get(message: "Please enter the name of the executable: ")
+            let executableName = try getExecutableName()
 
             guard try UserChoice.getBool(message: "Project will be created at: \(fileManager.currentDirectoryPath + "/Package.swift, would you like to proceed?")") else {
                 do {
@@ -43,10 +47,15 @@ private struct CreateProject {
                 exit(0)
             }
 
-            let godotPath: String = switch ProcessInfo.processInfo.environment["GODOT"] {
-                case .some(let value) where value.isEmpty == false: value
-                default: try UserChoice.get(message: Color.yellow + "GODOT not set\n" + "Please enter the full path to the Godot 4.2 executable: ")
+            let godotPath = try getGodotPath()
+
+            #if os(macOS)
+            guard !godotPath.hasSuffix(".app") else {
+                print(color: .red, "GODOT path ends in .app, it should be the path to executable itself")
+                print(color: .yellow, "try \(godotPath)/Contents/MacOS/Godot")
+                exit(1)
             }
+            #endif
 
             print(color: .green, "Created \(try FileFactory.createPackageFile(projectName: projectName, executableName: executableName))")
             print(color: .green, "Created \(try FileFactory.copyReadmeFile())")
@@ -77,6 +86,48 @@ private struct CreateProject {
 
         cd \(fileManager.currentDirectoryPath) && make all
         """)
+    }
+
+    static let fileManager = FileManager()
+}
+
+private func checkHelp() {
+    guard !UserChoice.shouldHelp else {
+        print(UserChoice.Argument.allCases.map { $0.usage + "\n\t" + $0.description }.joined(separator: "\n"))
+        exit(0)
+    }
+}
+
+private func checkShowVersion() {
+    guard !UserChoice.shouldShowVersion else {
+        print(version)
+        exit(0)
+    }
+}
+
+private func getProjectPath() throws -> String {
+    try checkFor(.projectPath, promptIfNeeded: "Please enter where you would like the project directory to be created: ")
+}
+
+private func getProjectName() throws -> String {
+    try checkFor(.projectName, promptIfNeeded: "Please enter the name of the project: ")
+}
+
+private func getExecutableName() throws -> String {
+    try checkFor(.executableName, promptIfNeeded: "Please enter the name of the executable: ")
+}
+
+private func getGodotPath() throws -> String {
+    switch ProcessInfo.processInfo.environment["GODOT"] {
+        case .some(let value) where value.isEmpty == false: value
+        default: try UserChoice.get(message: Color.yellow + "GODOT not set\n" + "Please enter the full path to the Godot 4.2 executable: ")
+    }
+}
+
+private func checkFor(_ argument: UserChoice.Argument, promptIfNeeded prompt: String) throws -> String {
+    switch ProcessInfo.processInfo.string(for: argument) {
+        case .some(let argument): argument
+        case .none: try UserChoice.get(message: prompt)
     }
 }
 

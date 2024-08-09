@@ -165,22 +165,22 @@ enum DataFactory {
         compatibility_minimum = 4.2
 
         [libraries]
-        macos.debug = "res://bin/lib\(projectName).\(arch.dynamicExtension)"
-        macos.release = "res://bin/lib\(projectName).\(arch.dynamicExtension)"
-        windows.debug.x86_32 = "res://bin/lib\(projectName).\(arch.dynamicExtension)"
-        windows.release.x86_32 = "res://bin/lib\(projectName).\(arch.dynamicExtension)"
-        windows.debug.x86_64 = "res://bin/lib\(projectName).\(arch.dynamicExtension)"
-        windows.release.x86_64 = "res://bin/lib\(projectName).\(arch.dynamicExtension)"
-        linux.debug.x86_64 = "res://bin/lib\(projectName).\(arch.dynamicExtension)"
-        linux.release.x86_64 = "res://bin/lib\(projectName).\(arch.dynamicExtension)"
-        linux.debug.arm64 = "res://bin/lib\(projectName).\(arch.dynamicExtension)"
-        linux.release.arm64 = "res://bin/lib\(projectName).\(arch.dynamicExtension)"
-        linux.debug.rv64 = "res://bin/lib\(projectName).\(arch.dynamicExtension)"
-        linux.release.rv64 = "res://bin/lib\(projectName).\(arch.dynamicExtension)"
-        android.debug.x86_64 = "res://bin/lib\(projectName).\(arch.dynamicExtension)"
-        android.release.x86_64 = "res://bin/lib\(projectName).\(arch.dynamicExtension)"
-        android.debug.arm64 = "res://bin/lib\(projectName).\(arch.dynamicExtension)"
-        android.release.arm64 = "res://bin/lib\(projectName).\(arch.dynamicExtension)"
+        macos.debug = "res://bin/lib\(projectName).\(dynamicExtension)"
+        macos.release = "res://bin/lib\(projectName).\(dynamicExtension)"
+        windows.debug.x86_32 = "res://bin/lib\(projectName).\(dynamicExtension)"
+        windows.release.x86_32 = "res://bin/lib\(projectName).\(dynamicExtension)"
+        windows.debug.x86_64 = "res://bin/lib\(projectName).\(dynamicExtension)"
+        windows.release.x86_64 = "res://bin/lib\(projectName).\(dynamicExtension)"
+        linux.debug.x86_64 = "res://bin/lib\(projectName).\(dynamicExtension)"
+        linux.release.x86_64 = "res://bin/lib\(projectName).\(dynamicExtension)"
+        linux.debug.arm64 = "res://bin/lib\(projectName).\(dynamicExtension)"
+        linux.release.arm64 = "res://bin/lib\(projectName).\(dynamicExtension)"
+        linux.debug.rv64 = "res://bin/lib\(projectName).\(dynamicExtension)"
+        linux.release.rv64 = "res://bin/lib\(projectName).\(dynamicExtension)"
+        android.debug.x86_64 = "res://bin/lib\(projectName).\(dynamicExtension)"
+        android.release.x86_64 = "res://bin/lib\(projectName).\(dynamicExtension)"
+        android.debug.arm64 = "res://bin/lib\(projectName).\(dynamicExtension)"
+        android.release.arm64 = "res://bin/lib\(projectName).\(dynamicExtension)"
         
         """
         .utf8Data
@@ -259,8 +259,8 @@ enum DataFactory {
         	rm -rf $(GODOT_BIN_PATH)
         	mkdir -p $(GODOT_BIN_PATH)
 
-        	cp $(BUILD_PATH)/debug/libSwiftGodot.\(arch.dynamicExtension) $(GODOT_BIN_PATH)
-        	cp $(BUILD_PATH)/debug/lib\(projectName).\(arch.dynamicExtension) $(GODOT_BIN_PATH)
+        	cp $(BUILD_PATH)/debug/libSwiftGodot.\(dynamicExtension) $(GODOT_BIN_PATH)
+        	cp $(BUILD_PATH)/debug/lib\(projectName).\(dynamicExtension) $(GODOT_BIN_PATH)
 
         .PHONY: run
         run:
@@ -282,28 +282,13 @@ enum DataFactory {
     }
 }
 
-private enum Architecture {
-    case x86_64
-    case arm64
-
-    var dynamicExtension: String {
-        switch self {
-            case .x86_64: "so"
-            case .arm64: "dylib"
-        }
-    }
-}
-
-private extension DataFactory {
-    static var arch: Architecture {
-        #if arch(x86_64)
-        .x86_64
-        #elseif arch(arm64)
-        .arm64
-        #else
-        fatalError("Unknown architecture")
-        #endif
-    }
+// on macOS, dynamic libraries have the .dylib file extension, but on other platforms it's .so
+private var dynamicExtension: String {
+    #if os(macOS)
+    "dylib"
+    #else
+    "so"
+    #endif
 }
 
 private extension String {
