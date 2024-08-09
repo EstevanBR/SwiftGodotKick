@@ -1,7 +1,7 @@
 import Foundation
 
 enum DataFactory {
-    static func makeEnvFileData(projectName: String, godotPath: String) throws -> Data {
+    static func makeEnvFileData(projectName: String, executableName: String, godotPath: String) throws -> Data {
         let directory = FileManager().currentDirectoryPath
         let godotProjectDirectory = directory + "/godot"
         return try
@@ -13,13 +13,13 @@ enum DataFactory {
         export GODOT_BIN_PATH=$(GODOT_PROJECT_DIRECTORY)/bin
         export BUILD_PATH=./.build
         export LIBRARY_NAME=$(PROJECT_NAME)
-        export EXECUTABLE_NAME=$(PROJECT_NAME)Game
+        export EXECUTABLE_NAME=\(executableName)
 
         """
         .utf8Data
     }
 
-    static func makePackageFileData(projectName: String) throws -> Data {
+    static func makePackageFileData(projectName: String, executableName: String) throws -> Data {
         try
         """
         // swift-tools-version: 5.9
@@ -31,8 +31,8 @@ enum DataFactory {
             platforms: [.macOS(.v13)],
             products: [
                 .executable(
-                    name: "\(projectName)Game",
-                    targets: ["\(projectName)Game"]),
+                    name: "\(executableName)",
+                    targets: ["\(executableName)"]),
                 .library(
                     name: "\(projectName)",
                     type: .dynamic,
@@ -44,7 +44,7 @@ enum DataFactory {
             ],
             targets: [
                 .executableTarget(
-                    name: "\(projectName)Game",
+                    name: "\(executableName)",
                     dependencies: [
                         "\(projectName)",
                         .product(name: "SwiftGodotKit", package: "SwiftGodotKit")
@@ -275,7 +275,7 @@ enum DataFactory {
         	@echo "Going to open Godot to ensure all resources are imported."
         	-$(GODOT) $(GODOT_PROJECT_FILE_PATH) --headless --quit
         	@echo "Exporting the .pck file"
-        	$(GODOT) --headless --path $(GODOT_PROJECT_DIRECTORY) --export-pack Packer ../Sources/$(LIBRARY_NAME)Game/Resources/$(LIBRARY_NAME).pck
+        	$(GODOT) --headless --path $(GODOT_PROJECT_DIRECTORY) --export-pack Packer ../Sources/$(EXECUTABLE_NAME)/Resources/$(LIBRARY_NAME).pck
 
         """
         .utf8Data
