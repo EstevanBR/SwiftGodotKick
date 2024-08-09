@@ -1,3 +1,5 @@
+import class Foundation.ProcessInfo
+
 enum Color: String {
     case reset = "\u{001B}[0;0m"
     case black = "\u{001B}[0;30m"
@@ -19,6 +21,9 @@ enum Color: String {
     case bgWhite = "\u{001B}[0;47m"
 
     static func +(color: Color, text: String) -> String {
+        guard UserChoice.shouldColorizeOutput else {
+            return text
+        }
         return color.rawValue + text + Color.reset.rawValue
     }
 }
