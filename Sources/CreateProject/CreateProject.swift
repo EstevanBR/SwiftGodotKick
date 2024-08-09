@@ -30,6 +30,8 @@ private struct CreateProject {
                 exit(1)
             }
 
+            let executableName: String = try UserChoice.get(message: "Please enter the name of the executable: ")
+
             guard try UserChoice.getBool(message: "Project will be created at: \(fileManager.currentDirectoryPath + "/Package.swift, would you like to proceed?")") else {
                 do {
                     print("Removing \(fileManager.currentDirectoryPath)")
@@ -46,13 +48,13 @@ private struct CreateProject {
                 default: try UserChoice.get(message: Color.yellow + "GODOT not set\n" + "Please enter the full path to the Godot 4.2 executable: ")
             }
 
-            print(color: .green, "Created \(try FileFactory.createPackageFile(projectName: projectName))")
+            print(color: .green, "Created \(try FileFactory.createPackageFile(projectName: projectName, executableName: executableName))")
             print(color: .green, "Created \(try FileFactory.copyReadmeFile())")
             print(color: .green, "Created \(try FileFactory.copyGitIgnoreFile())")
-            print(color: .green, "Created \(try FileFactory.createEnvFile(projectName: projectName, godotPath: godotPath))")
+            print(color: .green, "Created \(try FileFactory.createEnvFile(projectName: projectName, executableName: executableName, godotPath: godotPath))")
             print(color: .green, "Created \(try FileFactory.createSourcesDirectory())")
             print(color: .green, "Created \(try FileFactory.createLibraryTarget(projectName: projectName))")
-            print(color: .green, "Created \(try FileFactory.createExecutableTarget(projectName: projectName))")
+            print(color: .green, "Created \(try FileFactory.createExecutableTarget(projectName: projectName, executableName: executableName))")
             print(color: .green, "Created \(try FileFactory.copyGDDFile())")
             print(color: .green, "Created \(try FileFactory.copyGodotDirectory())")
             print(color: .green, "Created \(try FileFactory.createGodotProjectFile(projectName: projectName))")

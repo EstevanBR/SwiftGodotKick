@@ -23,9 +23,9 @@ enum FileFactory {
 
     }
 
-    static func createEnvFile(projectName: String, godotPath: String) throws -> String {
+    static func createEnvFile(projectName: String, executableName: String, godotPath: String) throws -> String {
         let directory = fileManager.currentDirectoryPath
-        let data = try DataFactory.makeEnvFileData(projectName: projectName, godotPath: godotPath)
+        let data = try DataFactory.makeEnvFileData(projectName: projectName, executableName: executableName, godotPath: godotPath)
         let path = directory + "/.env"
         fileManager.createFile(atPath: path, contents: data)
         return path
@@ -48,8 +48,7 @@ enum FileFactory {
         return librarySourceFile
     }
 
-    static func createExecutableTarget(projectName: String) throws -> String {
-        let executableName = projectName + "Game"
+    static func createExecutableTarget(projectName: String, executableName: String) throws -> String {
         let directory = fileManager.currentDirectoryPath
         let executableTargetDirectory = directory + "/Sources/\(executableName)"
 
@@ -64,10 +63,10 @@ enum FileFactory {
         return mainPath
     }
 
-    static func createPackageFile(projectName: String) throws -> String {
+    static func createPackageFile(projectName: String, executableName: String) throws -> String {
         let directory = fileManager.currentDirectoryPath
         let path = directory + "/Package.swift"
-        let data = try DataFactory.makePackageFileData(projectName: projectName)
+        let data = try DataFactory.makePackageFileData(projectName: projectName, executableName: executableName)
         guard fileManager.createFile(atPath: path, contents: data) else {
             throw Error.couldNotCreateFile(path: path)
         }
