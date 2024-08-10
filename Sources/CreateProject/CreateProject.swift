@@ -5,22 +5,15 @@ let version = "2.2.0"
 @main
 private struct CreateProject {
     static func main() throws {
-        checkHelp()
-        checkShowVersion()
+        let fileManager = FileManager()
+
+        showHelpIfNeeded()
+        showVersionIfNeeded()
 
         do {
             let projectPath = try getProjectPath()
 
-            let (projectPathExists, projectPathIsDirectory) = fileManager.directoryExists(atPath: projectPath)
-            
-            if !projectPathExists, !projectPathIsDirectory {
-                if try UserChoice.getBool(message: Color.yellow + "There is no directory at path: \(projectPath), would you like to create it?") {
-                    try fileManager.createDirectory(atPath: projectPath, withIntermediateDirectories: true)
-                } else {
-                    print("Goodbye")
-                    exit(1)
-                }
-            }
+            try createProjectPathDirectoryIfNeeded(at: projectPath)
 
             guard fileManager.changeCurrentDirectoryPath(projectPath) else {
                 throw ChangeDirectoryError(path: projectPath)
@@ -87,18 +80,16 @@ private struct CreateProject {
         cd \(fileManager.currentDirectoryPath) && make all
         """)
     }
-
-    static let fileManager = FileManager()
 }
 
-private func checkHelp() {
+private func showHelpIfNeeded() {
     guard !UserChoice.shouldHelp else {
         print(UserChoice.Argument.allCases.map { $0.usage + "\n\t" + $0.description }.joined(separator: "\n"))
         exit(0)
     }
 }
 
-private func checkShowVersion() {
+private func showVersionIfNeeded() {
     guard !UserChoice.shouldShowVersion else {
         print(version)
         exit(0)
@@ -131,6 +122,19 @@ private func checkFor(_ argument: UserChoice.Argument, promptIfNeeded prompt: St
     }
 }
 
-func print(color: Color, _ message: String) {
+private func print(color: Color, _ message: String) {
     print(color + message)
+}
+
+private func createProjectPathDirectoryIfNeeded(at projectPath: String) throws {
+    let fileManager = FileManager()
+    let (projectPathExists, projectPathIsDirectory) = fileManager.directoryExists(atPath: projectPath)
+    if !projectPathExists, !projectPathIsDirectory {
+        if try UserChoice.getBool(message: Color.yellow + "There is no directory at path: \(projectPath), would you like to create it?") {
+            try fileManager.createDirectory(atPath: projectPath, withIntermediateDirectories: true)
+        } else {
+            print("Goodbye")
+            exit(1)
+        }
+    }
 }
