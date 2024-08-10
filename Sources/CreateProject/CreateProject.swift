@@ -11,6 +11,8 @@ private struct CreateProject {
         showVersionIfNeeded()
 
         do {
+            let godotPath = try getGodotPath()
+
             let projectPath = try getProjectPath()
 
             try createProjectPathDirectoryIfNeeded(at: projectPath)
@@ -39,16 +41,6 @@ private struct CreateProject {
                 print("Goodbye")
                 exit(0)
             }
-
-            let godotPath = try getGodotPath()
-
-            #if os(macOS)
-            guard !godotPath.hasSuffix(".app") else {
-                print(color: .red, "GODOT path ends in .app, it should be the path to executable itself")
-                print(color: .yellow, "try \(godotPath)/Contents/MacOS/Godot")
-                exit(1)
-            }
-            #endif
 
             print(color: .green, "Created \(try FileFactory.createPackageFile(projectName: projectName, executableName: executableName))")
             print(color: .green, "Created \(try FileFactory.copyReadmeFile())")
@@ -109,10 +101,21 @@ private func getExecutableName() throws -> String {
 }
 
 private func getGodotPath() throws -> String {
-    switch ProcessInfo.processInfo.environment["GODOT"] {
-        case .some(let value) where value.isEmpty == false: value
-        default: try UserChoice.get(message: Color.yellow + "GODOT not set\n" + "Please enter the full path to the Godot 4.2 executable: ")
+    let godotPath: String
+
+    godotPath = if let godotPathFromEnv = ProcessInfo.processInfo.environment["GODOT"] {
+        godotPathFromEnv
+    } else {
+        try UserChoice.get(message: Color.yellow + "Missing GODOT environment variable\n" + "Please enter the full path to the Godot 4.2 executable: ")
     }
+
+    #if os(macOS)
+    guard !godotPath.hasSuffix(".app") else {
+        throw GodotPathError(path: godotPath)
+    }
+    #endif
+
+    return godotPath
 }
 
 private func checkFor(_ argument: UserChoice.Argument, promptIfNeeded prompt: String) throws -> String {
@@ -138,3 +141,17 @@ private func createProjectPathDirectoryIfNeeded(at projectPath: String) throws {
         }
     }
 }
+
+#if os(macOS)
+private struct GodotPathError: Swift.Error, LocalizedError {
+    let path: String
+
+    var errorDescription: String? {
+        "\(path) ends in .app"
+    }
+
+    var recoverySuggestion: String? {
+        "try \(path)/Contents/MacOS/Godot"
+    }
+}
+#endif
