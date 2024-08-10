@@ -2,13 +2,11 @@ import Foundation
 
 enum DataFactory {
     static func makeEnvFileData(projectName: String, executableName: String, godotPath: String) throws -> Data {
-        let directory = FileManager().currentDirectoryPath
-        let godotProjectDirectory = directory + "/godot"
-        return try
+        try
         """
         export PROJECT_NAME=\(projectName)
         export GODOT=\(godotPath)
-        export GODOT_PROJECT_DIRECTORY=\(godotProjectDirectory)
+        export GODOT_PROJECT_DIRECTORY=\(FileManager().currentDirectoryPath + "/godot")
         export GODOT_PROJECT_FILE_PATH=$(GODOT_PROJECT_DIRECTORY)/project.godot
         export GODOT_BIN_PATH=$(GODOT_PROJECT_DIRECTORY)/bin
         export BUILD_PATH=./.build
@@ -116,7 +114,9 @@ enum DataFactory {
         func registerTypes (level: GDExtension.InitializationLevel) {
             switch level {
             case .scene:
-                \(projectName).godotTypes.forEach { register(type: $0) }
+                #warning("uncomment this line if type casting / lookups don't work")
+                // \(projectName).godotTypes.forEach { register(type: $0) }
+                break
             default:
                 break
             }
@@ -165,6 +165,10 @@ enum DataFactory {
         compatibility_minimum = 4.2
 
         [libraries]
+        # web is not actually functional but required to use a Web export template when creating the .pck file via `make pack`
+        web.debug = "res://bin/lib\(projectName).\(dynamicExtension)"
+        web.release = "res://bin/lib\(projectName).\(dynamicExtension)"
+
         macos.debug = "res://bin/lib\(projectName).\(dynamicExtension)"
         macos.release = "res://bin/lib\(projectName).\(dynamicExtension)"
         windows.debug.x86_32 = "res://bin/lib\(projectName).\(dynamicExtension)"
@@ -196,8 +200,7 @@ enum DataFactory {
         runnable=true
         dedicated_server=false
         custom_features=""
-        export_filter="exclude"
-        export_files=PackedStringArray("res://\(projectName).gdextension")
+        export_filter="all_resources"
         include_filter=""
         exclude_filter=""
         export_path=""
