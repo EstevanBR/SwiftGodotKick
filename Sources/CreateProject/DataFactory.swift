@@ -166,25 +166,17 @@ enum DataFactory {
 
         [libraries]
         # web is not actually functional but required to use a Web export template when creating the .pck file via `make pack`
-        web.debug = "res://bin/lib\(projectName).\(dynamicExtension)"
-        web.release = "res://bin/lib\(projectName).\(dynamicExtension)"
+        web.debug = "res://bin/lib\(projectName).so"
+        web.release = "res://bin/lib\(projectName).so"
 
-        macos.debug = "res://bin/lib\(projectName).\(dynamicExtension)"
-        macos.release = "res://bin/lib\(projectName).\(dynamicExtension)"
-        windows.debug.x86_32 = "res://bin/lib\(projectName).\(dynamicExtension)"
-        windows.release.x86_32 = "res://bin/lib\(projectName).\(dynamicExtension)"
-        windows.debug.x86_64 = "res://bin/lib\(projectName).\(dynamicExtension)"
-        windows.release.x86_64 = "res://bin/lib\(projectName).\(dynamicExtension)"
-        linux.debug.x86_64 = "res://bin/lib\(projectName).\(dynamicExtension)"
-        linux.release.x86_64 = "res://bin/lib\(projectName).\(dynamicExtension)"
-        linux.debug.arm64 = "res://bin/lib\(projectName).\(dynamicExtension)"
-        linux.release.arm64 = "res://bin/lib\(projectName).\(dynamicExtension)"
-        linux.debug.rv64 = "res://bin/lib\(projectName).\(dynamicExtension)"
-        linux.release.rv64 = "res://bin/lib\(projectName).\(dynamicExtension)"
-        android.debug.x86_64 = "res://bin/lib\(projectName).\(dynamicExtension)"
-        android.release.x86_64 = "res://bin/lib\(projectName).\(dynamicExtension)"
-        android.debug.arm64 = "res://bin/lib\(projectName).\(dynamicExtension)"
-        android.release.arm64 = "res://bin/lib\(projectName).\(dynamicExtension)"
+        macos.debug = "res://bin/lib\(projectName).dylib"
+        macos.release = "res://bin/lib\(projectName).dylib"
+        windows.debug = "res://bin/lib\(projectName).dll"
+        windows.release = "res://bin/lib\(projectName).dll"
+        linux.debug = "res://bin/lib\(projectName).so"
+        linux.release = "res://bin/lib\(projectName).so"
+        android.debug = "res://bin/lib\(projectName).so"
+        android.release = "res://bin/lib\(projectName).so"
         
         """
         .utf8Data
@@ -262,8 +254,14 @@ enum DataFactory {
         	rm -rf $(GODOT_BIN_PATH)
         	mkdir -p $(GODOT_BIN_PATH)
 
-        	cp $(BUILD_PATH)/debug/libSwiftGodot.\(dynamicExtension) $(GODOT_BIN_PATH)
-        	cp $(BUILD_PATH)/debug/lib\(projectName).\(dynamicExtension) $(GODOT_BIN_PATH)
+        	-cp $(BUILD_PATH)/debug/libSwiftGodot.dylib $(GODOT_BIN_PATH)
+        	-cp $(BUILD_PATH)/debug/lib\(projectName).dylib $(GODOT_BIN_PATH)
+
+        	-cp $(BUILD_PATH)/debug/libSwiftGodot.so $(GODOT_BIN_PATH)
+        	-cp $(BUILD_PATH)/debug/lib\(projectName).so $(GODOT_BIN_PATH)
+
+        	-cp $(BUILD_PATH)/debug/libSwiftGodot.dll $(GODOT_BIN_PATH)
+        	-cp $(BUILD_PATH)/debug/lib\(projectName).dll $(GODOT_BIN_PATH)
 
         .PHONY: run
         run:
@@ -283,15 +281,6 @@ enum DataFactory {
         """
         .utf8Data
     }
-}
-
-// on macOS, dynamic libraries have the .dylib file extension, but on other platforms it's .so
-private var dynamicExtension: String {
-    #if os(macOS)
-    "dylib"
-    #else
-    "so"
-    #endif
 }
 
 private extension String {
