@@ -44,9 +44,7 @@ private struct CreateProject {
 
             #if os(macOS)
             guard !godotPath.hasSuffix(".app") else {
-                print(color: .red, "GODOT path ends in .app, it should be the path to executable itself")
-                print(color: .yellow, "try \(godotPath)/Contents/MacOS/Godot")
-                exit(1)
+                throw GodotPathError(path: godotPath)
             }
             #endif
 
@@ -138,3 +136,17 @@ private func createProjectPathDirectoryIfNeeded(at projectPath: String) throws {
         }
     }
 }
+
+#if os(macOS)
+private struct GodotPathError: Swift.Error, LocalizedError {
+    let path: String
+
+    var errorDescription: String? {
+        "godot path: godotPath ends in .app"
+    }
+
+    var recoverySuggestion: String? {
+        "try \(path)/Contents/MacOS/Godot"
+    }
+}
+#endif
