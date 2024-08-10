@@ -165,6 +165,10 @@ enum DataFactory {
         compatibility_minimum = 4.2
 
         [libraries]
+        # web is not actually functional but required to use a Web export template when creating the .pck file via `make pack`
+        web.debug = "res://bin/lib\(projectName).\(dynamicExtension)"
+        web.release = "res://bin/lib\(projectName).\(dynamicExtension)"
+
         macos.debug = "res://bin/lib\(projectName).\(dynamicExtension)"
         macos.release = "res://bin/lib\(projectName).\(dynamicExtension)"
         windows.debug.x86_32 = "res://bin/lib\(projectName).\(dynamicExtension)"
@@ -190,9 +194,9 @@ enum DataFactory {
         try
         """
         [preset.0]
-        
+
         name="Packer"
-        platform="Linux/X11"
+        platform="Web"
         runnable=true
         dedicated_server=false
         custom_features=""
@@ -209,25 +213,23 @@ enum DataFactory {
 
         custom_template/debug=""
         custom_template/release=""
-        debug/export_console_wrapper=1
-        binary_format/embed_pck=false
-        texture_format/bptc=true
-        texture_format/s3tc=true
-        texture_format/etc=false
-        texture_format/etc2=false
-        binary_format/architecture="x86_64"
-        ssh_remote_deploy/enabled=false
-        ssh_remote_deploy/host="user@host_ip"
-        ssh_remote_deploy/port="22"
-        ssh_remote_deploy/extra_args_ssh=""
-        ssh_remote_deploy/extra_args_scp=""
-        ssh_remote_deploy/run_script="#!/usr/bin/env bash
-        export DISPLAY=:0
-        unzip -o -q \"{temp_dir}/{archive_name}\" -d \"{temp_dir}\"
-        \"{temp_dir}/{exe_name}\" {cmd_args}"
-        ssh_remote_deploy/cleanup_script="#!/usr/bin/env bash
-        kill $(pgrep -x -f \"{temp_dir}/{exe_name} {cmd_args}\")
-        rm -rf \"{temp_dir}\""
+        variant/extensions_support=false
+        vram_texture_compression/for_desktop=true
+        vram_texture_compression/for_mobile=false
+        html/export_icon=true
+        html/custom_html_shell=""
+        html/head_include=""
+        html/canvas_resize_policy=2
+        html/focus_canvas_on_start=true
+        html/experimental_virtual_keyboard=false
+        progressive_web_app/enabled=false
+        progressive_web_app/offline_page=""
+        progressive_web_app/display=1
+        progressive_web_app/orientation=0
+        progressive_web_app/icon_144x144=""
+        progressive_web_app/icon_180x180=""
+        progressive_web_app/icon_512x512=""
+        progressive_web_app/background_color=Color(0, 0, 0, 1)
         """
         .utf8Data
     }
