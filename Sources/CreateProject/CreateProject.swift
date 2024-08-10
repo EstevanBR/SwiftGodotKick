@@ -1,6 +1,6 @@
 import Foundation
 
-let version = "2.2.0"
+let version = "2.2.1"
 
 @main
 private struct CreateProject {
