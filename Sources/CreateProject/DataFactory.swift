@@ -166,17 +166,19 @@ enum DataFactory {
 
         [libraries]
         # web is not actually functional but required to use a Web export template when creating the .pck file via `make pack`
-        web.debug = "res://bin/lib\(projectName).so"
-        web.release = "res://bin/lib\(projectName).so"
+        web.debug = "res://bin/debug/lib\(projectName).so"
+        web.release = "res://bin/release/lib\(projectName).so"
 
-        macos.debug = "res://bin/lib\(projectName).dylib"
-        macos.release = "res://bin/lib\(projectName).dylib"
-        windows.debug = "res://bin/lib\(projectName).dll"
-        windows.release = "res://bin/lib\(projectName).dll"
-        linux.debug = "res://bin/lib\(projectName).so"
-        linux.release = "res://bin/lib\(projectName).so"
-        android.debug = "res://bin/lib\(projectName).so"
-        android.release = "res://bin/lib\(projectName).so"
+        macos.debug = "res://bin/debug/lib\(projectName).dylib"
+        macos.release = "res://bin/release/lib\(projectName).dylib"
+        ios.debug = "res://bin/debug/lib\(projectName).dylib"
+        ios.release = "res://bin/release/lib\(projectName).dylib"
+        windows.debug = "res://bin/debug/lib\(projectName).dll"
+        windows.release = "res://bin/release/lib\(projectName).dll"
+        linux.debug = "res://bin/debug/lib\(projectName).so"
+        linux.release = "res://bin/release/lib\(projectName).so"
+        android.debug = "res://bin/debug/lib\(projectName).so"
+        android.release = "res://bin/release/lib\(projectName).so"
         
         """
         .utf8Data
@@ -254,14 +256,23 @@ enum DataFactory {
         	rm -rf $(GODOT_BIN_PATH)
         	mkdir -p $(GODOT_BIN_PATH)
 
-        	-cp $(BUILD_PATH)/debug/libSwiftGodot.dylib $(GODOT_BIN_PATH)
-        	-cp $(BUILD_PATH)/debug/lib\(projectName).dylib $(GODOT_BIN_PATH)
+        	-cp $(BUILD_PATH)/debug/libSwiftGodot.dylib $(GODOT_BIN_PATH)/debug
+        	-cp $(BUILD_PATH)/debug/lib\(projectName).dylib $(GODOT_BIN_PATH)/debug
 
-        	-cp $(BUILD_PATH)/debug/libSwiftGodot.so $(GODOT_BIN_PATH)
-        	-cp $(BUILD_PATH)/debug/lib\(projectName).so $(GODOT_BIN_PATH)
+        	-cp $(BUILD_PATH)/debug/libSwiftGodot.so $(GODOT_BIN_PATH)/debug
+        	-cp $(BUILD_PATH)/debug/lib\(projectName).so $(GODOT_BIN_PATH)/debug
 
-        	-cp $(BUILD_PATH)/debug/libSwiftGodot.dll $(GODOT_BIN_PATH)
-        	-cp $(BUILD_PATH)/debug/lib\(projectName).dll $(GODOT_BIN_PATH)
+        	-cp $(BUILD_PATH)/debug/libSwiftGodot.dll $(GODOT_BIN_PATH)/debug
+        	-cp $(BUILD_PATH)/debug/lib\(projectName).dll $(GODOT_BIN_PATH)/debug
+
+            -cp $(BUILD_PATH)/release/libSwiftGodot.dylib $(GODOT_BIN_PATH)/release
+        	-cp $(BUILD_PATH)/release/lib\(projectName).dylib $(GODOT_BIN_PATH)/release
+
+        	-cp $(BUILD_PATH)/release/libSwiftGodot.so $(GODOT_BIN_PATH)/release
+        	-cp $(BUILD_PATH)/release/lib\(projectName).so $(GODOT_BIN_PATH)/release
+
+        	-cp $(BUILD_PATH)/release/libSwiftGodot.dll $(GODOT_BIN_PATH)/release
+        	-cp $(BUILD_PATH)/release/lib\(projectName).dll $(GODOT_BIN_PATH)/release
 
         .PHONY: run
         run:
