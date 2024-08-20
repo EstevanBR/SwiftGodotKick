@@ -250,6 +250,12 @@ enum DataFactory {
         	mkdir -p $(BUILD_PATH)
         	swift build --product $(LIBRARY_NAME) --build-path $(BUILD_PATH)
         	swift build --product $(EXECUTABLE_NAME) --build-path $(BUILD_PATH)
+        
+        .PHONY: build_release
+        build_release:
+        	mkdir -p $(BUILD_PATH)
+        	swift build --configuration release --product $(LIBRARY_NAME) --build-path $(BUILD_PATH)
+        	swift build --configuration release --product $(EXECUTABLE_NAME) --build-path $(BUILD_PATH)
 
         .PHONY: deploy
         deploy:
@@ -276,7 +282,7 @@ enum DataFactory {
         	-cp $(BUILD_PATH)/release/libSwiftGodot.so $(GODOT_BIN_PATH)/release
         	-cp $(BUILD_PATH)/release/lib\(projectName).so $(GODOT_BIN_PATH)/release
 
-        	@echo "copying release .dylib files..."
+        	@echo "copying release .dll files..."
         	-cp $(BUILD_PATH)/release/libSwiftGodot.dll $(GODOT_BIN_PATH)/release
         	-cp $(BUILD_PATH)/release/lib\(projectName).dll $(GODOT_BIN_PATH)/release
 
