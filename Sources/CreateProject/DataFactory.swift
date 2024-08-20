@@ -256,21 +256,27 @@ enum DataFactory {
         	rm -rf $(GODOT_BIN_PATH)
         	mkdir -p $(GODOT_BIN_PATH)
 
+        	@echo "copying debug .dylib files..."
         	-cp $(BUILD_PATH)/debug/libSwiftGodot.dylib $(GODOT_BIN_PATH)/debug
         	-cp $(BUILD_PATH)/debug/lib\(projectName).dylib $(GODOT_BIN_PATH)/debug
 
+        	@echo "copying debug .so files..."
         	-cp $(BUILD_PATH)/debug/libSwiftGodot.so $(GODOT_BIN_PATH)/debug
         	-cp $(BUILD_PATH)/debug/lib\(projectName).so $(GODOT_BIN_PATH)/debug
 
+        	@echo "copying debug .dll files..."
         	-cp $(BUILD_PATH)/debug/libSwiftGodot.dll $(GODOT_BIN_PATH)/debug
         	-cp $(BUILD_PATH)/debug/lib\(projectName).dll $(GODOT_BIN_PATH)/debug
 
-            -cp $(BUILD_PATH)/release/libSwiftGodot.dylib $(GODOT_BIN_PATH)/release
+        	@echo "copying release .dylib files..."
+        	-cp $(BUILD_PATH)/release/libSwiftGodot.dylib $(GODOT_BIN_PATH)/release
         	-cp $(BUILD_PATH)/release/lib\(projectName).dylib $(GODOT_BIN_PATH)/release
 
+        	@echo "copying release .so files..."
         	-cp $(BUILD_PATH)/release/libSwiftGodot.so $(GODOT_BIN_PATH)/release
         	-cp $(BUILD_PATH)/release/lib\(projectName).so $(GODOT_BIN_PATH)/release
 
+        	@echo "copying release .dylib files..."
         	-cp $(BUILD_PATH)/release/libSwiftGodot.dll $(GODOT_BIN_PATH)/release
         	-cp $(BUILD_PATH)/release/lib\(projectName).dll $(GODOT_BIN_PATH)/release
 
