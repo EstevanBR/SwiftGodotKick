@@ -2,7 +2,6 @@ import Foundation
 
 enum DataFactory {
     static func makeEnvFileData(projectName: String, executableName: String, godotPath: String) throws -> Data {
-        try
         """
         export PROJECT_NAME=\(projectName)
         export GODOT=\(godotPath)
@@ -18,7 +17,6 @@ enum DataFactory {
     }
 
     static func makePackageFileData(projectName: String, executableName: String) throws -> Data {
-        try
         """
         // swift-tools-version: 5.9
 
@@ -63,7 +61,6 @@ enum DataFactory {
     }
 
     static func makeLibraryFileData() throws -> Data {
-        try
         """
         import SwiftGodot
 
@@ -96,7 +93,6 @@ enum DataFactory {
     }
 
     static func makeMainFileData(projectName: String) throws -> Data {
-        try
         """
         import Foundation
         import SwiftGodot
@@ -136,7 +132,6 @@ enum DataFactory {
     }
 
     static func makeGodotProjectFileData(projectName: String) throws -> Data {
-        try
         """
         ; Engine configuration file.
         ; It's best edited using the editor UI and not directly,
@@ -158,7 +153,6 @@ enum DataFactory {
     }
 
     static func makeGDExtensionFileData(projectName: String) throws -> Data {
-        try
         """
         [configuration]
         entry_symbol = "swift_entry_point"
@@ -191,7 +185,6 @@ enum DataFactory {
     }
 
     static func makeExportPresetsFileData(projectName: String) throws -> Data {
-        try
         """
         [preset.0]
 
@@ -235,7 +228,7 @@ enum DataFactory {
     }
 
     static func makeMakefile(projectName: String) throws -> Data {
-        try """
+        """
         include .env
 
         .PHONY: all
@@ -295,18 +288,9 @@ private var dynamicExtension: String {
 }
 
 private extension String {
-    private enum Error: Swift.Error, LocalizedError {
-        case noData
-
-        var errorDescription: String? {
-            "Could not get utf8 data from string"
-        }
-    }
-
     var utf8Data: Data {
-        get throws {
-            guard let data = self.data(using: .utf8) else { throw Error.noData }
-            return data
+        get {
+            return Data(self.utf8)
         }
     }
 }

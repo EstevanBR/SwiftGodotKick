@@ -21,8 +21,6 @@ private struct CreateProject {
                 throw ChangeDirectoryError(path: projectPath)
             }
 
-            
-
             let contents = try fileManager.contentsOfDirectory(atPath: fileManager.currentDirectoryPath)
             guard contents.isEmpty else {
                 print(color: .red, "Directory at \(projectPath) must be empty, but found: \(contents.joined(separator: ", "))")
