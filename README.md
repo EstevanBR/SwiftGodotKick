@@ -3,14 +3,14 @@
 ### Initial setup
 Just run this:
 ```
-$ swift run CreateProject
+$ swift run swift-godot-kick
 ```
 
 and follow the prompts.
 
 ### Example output
 ```
-$ swift run CreateProject
+$ swift run swift-godot-kick
 
 Please enter where you would like the project directory to be created: ../KickExampleProject
 There is no directory at path: ../KickExampleProject, would you like to create it? (y/n): y
