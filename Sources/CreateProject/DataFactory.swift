@@ -38,7 +38,8 @@ enum DataFactory {
             ],
             dependencies: [
                 .package(url: "https://github.com/migueldeicaza/SwiftGodot", revision: "fe24cb01640c2d4d48c8555a71adfe346d9543cf"),
-                .package(url: "https://github.com/migueldeicaza/SwiftGodotKit", branch: "main")
+                // 4.3.5 tag
+                .package(url: "https://github.com/migueldeicaza/SwiftGodotKit", revision: "1a720b3be1d4b9f87f97c40d03e6ecf735768162")
             ],
             targets: [
                 .executableTarget(
