@@ -21,15 +21,20 @@ private struct CreateProject {
                 throw ChangeDirectoryError(path: projectPath)
             }
 
-            let projectName = try getProjectName()
-
             let contents = try fileManager.contentsOfDirectory(atPath: fileManager.currentDirectoryPath)
             guard contents.isEmpty else {
                 print(color: .red, "Directory at \(projectPath) must be empty, but found: \(contents.joined(separator: ", "))")
                 exit(1)
             }
 
+            let projectName = try getProjectName()
+            
             let executableName = try getExecutableName()
+            
+            if projectName == executableName {
+                print(color: .red, "Project name and Executable Name must be different")
+                exit(0)
+            }
 
             guard try UserChoice.getBool(message: "Project will be created at: \(fileManager.currentDirectoryPath + "/Package.swift, would you like to proceed?")") else {
                 do {
@@ -93,7 +98,7 @@ private func getProjectPath() throws -> String {
 }
 
 private func getProjectName() throws -> String {
-    try checkFor(.projectName, promptIfNeeded: "Please enter the name of the project: ")
+    format(targetName: try checkFor(.projectName, promptIfNeeded: "Please enter the name of the project: "))
 }
 
 private func getExecutableName() throws -> String {
@@ -140,6 +145,27 @@ private func createProjectPathDirectoryIfNeeded(at projectPath: String) throws {
             exit(1)
         }
     }
+}
+
+func format(targetName: String) -> String {
+    var newName = ""
+    let badCharacter: Set<Character> = [" ", "-"]
+    // Upper case first one
+    var uppercaseNext = true
+    
+    for character in targetName {
+        if badCharacter.contains(character) {
+            uppercaseNext = true
+            continue
+        }
+        if uppercaseNext {
+            newName.append(character.uppercased())
+            uppercaseNext = false
+            continue
+        }
+        newName.append(character)
+    }
+    return newName
 }
 
 #if os(macOS)
