@@ -37,9 +37,8 @@ enum DataFactory {
                     targets: ["\(projectName)"]),
             ],
             dependencies: [
-                .package(url: "https://github.com/migueldeicaza/SwiftGodot", revision: "a1af0de831a22a2f1d5d8b4221d9df2fdd12978f"),
-                // 4.3.5 tag
-                .package(url: "https://github.com/migueldeicaza/SwiftGodotKit", revision: "7f59a1ad97d243a071b548bed7ff573449c82af5")
+                .package(url: "https://github.com/migueldeicaza/SwiftGodot", revision: "20d2d7a35d2ad392ec556219ea004da14ab7c1d4"),
+                .package(url: "https://github.com/migueldeicaza/SwiftGodotKit", revision: "7d7edf2f7701ef0328aece07399ba878241c62f0")
             ],
             targets: [
                 .executableTarget(
@@ -152,7 +151,7 @@ enum DataFactory {
         [application]
 
         config/name="\(projectName)"
-        config/features=PackedStringArray("4.2")
+        config/features=PackedStringArray("\(godotVersion)")
         
         """
         .utf8Data
@@ -163,7 +162,7 @@ enum DataFactory {
         """
         [configuration]
         entry_symbol = "swift_entry_point"
-        compatibility_minimum = 4.2
+        compatibility_minimum = \(godotVersion)
 
         [libraries]
         # web is not actually functional but required to use a Web export template when creating the .pck file via `make pack`

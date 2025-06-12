@@ -1,6 +1,7 @@
 import Foundation
 
-let version = "2.2.2"
+let version = "3.0.0"
+let godotVersion = "4.4"
 
 @main
 private struct CreateProject {
@@ -106,7 +107,7 @@ private func getGodotPath() throws -> String {
     godotPath = if let godotPathFromEnv = ProcessInfo.processInfo.environment["GODOT"] {
         godotPathFromEnv
     } else {
-        try UserChoice.get(message: Color.yellow + "Missing GODOT environment variable\n" + "Please enter the full path to the Godot 4.2 executable: ")
+        try UserChoice.get(message: Color.yellow + "Missing GODOT environment variable\n" + "Please enter the full path to the Godot \(godotVersion) executable: ")
     }
 
     #if os(macOS)
