@@ -20,13 +20,13 @@ enum DataFactory {
     static func makePackageFileData(projectName: String, executableName: String) throws -> Data {
         try
         """
-        // swift-tools-version: 5.9
+        // swift-tools-version: \(swiftToolsVersion)
 
         import PackageDescription
 
         let package = Package(
             name: "\(projectName)",
-            platforms: [.macOS(.v13)],
+            platforms: [.macOS(.v14)],
             products: [
                 .executable(
                     name: "\(executableName)",
@@ -38,7 +38,6 @@ enum DataFactory {
             ],
             dependencies: [
                 .package(url: "https://github.com/migueldeicaza/SwiftGodot", revision: "a1af0de831a22a2f1d5d8b4221d9df2fdd12978f"),
-                // 4.3.5 tag
                 .package(url: "https://github.com/migueldeicaza/SwiftGodotKit", revision: "7f59a1ad97d243a071b548bed7ff573449c82af5")
             ],
             targets: [
@@ -86,7 +85,7 @@ enum DataFactory {
             }
         }
 
-        public let godotTypes: [Wrapped.Type] = [
+        public let godotTypes: [Object.Type] = [
             Icon2D.self
         ]
 
@@ -152,7 +151,7 @@ enum DataFactory {
         [application]
 
         config/name="\(projectName)"
-        config/features=PackedStringArray("4.2")
+        config/features=PackedStringArray("\(godotVersion)")
         
         """
         .utf8Data
@@ -163,7 +162,7 @@ enum DataFactory {
         """
         [configuration]
         entry_symbol = "swift_entry_point"
-        compatibility_minimum = 4.2
+        compatibility_minimum = \(godotVersion)
 
         [libraries]
         # web is not actually functional but required to use a Web export template when creating the .pck file via `make pack`

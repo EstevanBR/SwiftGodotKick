@@ -1,6 +1,11 @@
 import Foundation
 
-let version = "2.2.2"
+let version = "3.0.0"
+// Godot 4.4 is not supported yet
+let godotVersion = "4.3"
+let swiftToolsVersion = "5.9"
+
+// TODO: check for valid/invalid project / executable names (spaces cause an issue for example)
 
 @main
 private struct CreateProject {
@@ -29,7 +34,7 @@ private struct CreateProject {
                 exit(1)
             }
 
-            let executableName = try getExecutableName()
+            let executableName = try getExecutableName(projectName: projectName)
 
             guard try UserChoice.getBool(message: "Project will be created at: \(fileManager.currentDirectoryPath + "/Package.swift, would you like to proceed?")") else {
                 do {
@@ -96,8 +101,13 @@ private func getProjectName() throws -> String {
     try checkFor(.projectName, promptIfNeeded: "Please enter the name of the project: ")
 }
 
-private func getExecutableName() throws -> String {
-    try checkFor(.executableName, promptIfNeeded: "Please enter the name of the executable: ")
+private func getExecutableName(projectName: String) throws -> String {
+    let executableName = try checkFor(.executableName, promptIfNeeded: "Please enter the name of the executable (must be different from \(projectName)): ")
+    guard executableName.lowercased() != projectName.lowercased() else {
+        throw CreateProjectError.executableNameMustBeUnique(executableName: executableName, projectName: projectName)
+    }
+
+    return executableName
 }
 
 private func getGodotPath() throws -> String {
@@ -106,7 +116,7 @@ private func getGodotPath() throws -> String {
     godotPath = if let godotPathFromEnv = ProcessInfo.processInfo.environment["GODOT"] {
         godotPathFromEnv
     } else {
-        try UserChoice.get(message: Color.yellow + "Missing GODOT environment variable\n" + "Please enter the full path to the Godot 4.2 executable: ")
+        try UserChoice.get(message: Color.yellow + "Missing GODOT environment variable\n" + "Please enter the full path to the Godot \(godotVersion) executable: ")
     }
 
     #if os(macOS)
@@ -155,3 +165,20 @@ private struct GodotPathError: Swift.Error, LocalizedError {
     }
 }
 #endif
+
+private enum CreateProjectError: Swift.Error, LocalizedError {
+    case executableNameMustBeUnique(executableName: String, projectName: String)
+
+    var errorDescription: String? {
+        switch self {
+            case let .executableNameMustBeUnique((executableName, projectName)):
+                "Executable name \"\(executableName)\" and project name \"\(projectName)\" must be different"
+        }
+    }
+
+    var recoverySuggestion: String? {
+        switch self {
+            case .executableNameMustBeUnique: "Choose a different name for either the project or the executable so that they are unique"
+        }
+    }
+}
