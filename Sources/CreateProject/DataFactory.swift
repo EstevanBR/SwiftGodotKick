@@ -28,19 +28,24 @@ enum DataFactory {
             name: "\(projectName)",
             platforms: [.macOS(.v14)],
             products: [
-                .executable(
-                    name: "\(executableName)",
-                    targets: ["\(executableName)"]),
                 .library(
                     name: "\(projectName)",
                     type: .dynamic,
                     targets: ["\(projectName)"]),
+                .executable(
+                    name: "\(executableName)",
+                    targets: ["\(executableName)"]),
             ],
             dependencies: [
                 .package(url: "https://github.com/migueldeicaza/SwiftGodot", revision: "a1af0de831a22a2f1d5d8b4221d9df2fdd12978f"),
                 .package(url: "https://github.com/migueldeicaza/SwiftGodotKit", revision: "7f59a1ad97d243a071b548bed7ff573449c82af5")
             ],
             targets: [
+                .target(
+                    name: "\(projectName)",
+                    dependencies: [
+                        .product(name: "SwiftGodot", package: "SwiftGodot")
+                    ]),
                 .executableTarget(
                     name: "\(executableName)",
                     dependencies: [
@@ -49,12 +54,7 @@ enum DataFactory {
                     ],
                     resources: [
                         .copy("Resources")
-                    ]),
-                .target(
-                    name: "\(projectName)",
-                    dependencies: [
-                        .product(name: "SwiftGodot", package: "SwiftGodot")
-                    ]),
+                    ])
             ]
         )
 
