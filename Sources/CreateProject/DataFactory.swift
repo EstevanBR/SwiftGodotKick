@@ -20,13 +20,13 @@ enum DataFactory {
     static func makePackageFileData(projectName: String, executableName: String) throws -> Data {
         try
         """
-        // swift-tools-version: 5.9
+        // swift-tools-version: \(swiftToolsVersion)
 
         import PackageDescription
 
         let package = Package(
             name: "\(projectName)",
-            platforms: [.macOS(.v13)],
+            platforms: [.macOS(.v14)],
             products: [
                 .executable(
                     name: "\(executableName)",
@@ -85,7 +85,7 @@ enum DataFactory {
             }
         }
 
-        public let godotTypes: [Wrapped.Type] = [
+        public let godotTypes: [Object.Type] = [
             Icon2D.self
         ]
 

@@ -2,6 +2,7 @@ import Foundation
 
 let version = "3.0.0"
 let godotVersion = "4.4"
+let swiftToolsVersion = "5.9"
 
 @main
 private struct CreateProject {
