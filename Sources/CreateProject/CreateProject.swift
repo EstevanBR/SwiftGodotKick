@@ -1,7 +1,8 @@
 import Foundation
 
 let version = "3.0.0"
-let godotVersion = "4.4"
+// Godot 4.4 is not supported yet
+let godotVersion = "4.3"
 let swiftToolsVersion = "5.9"
 
 @main
