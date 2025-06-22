@@ -171,7 +171,7 @@ private enum CreateProjectError: Swift.Error, LocalizedError {
 
     var errorDescription: String? {
         switch self {
-            case let .executableNameMustBeUnique((executableName, projectName)):
+            case let .executableNameMustBeUnique(executableName, projectName):
                 "Executable name \"\(executableName)\" and project name \"\(projectName)\" must be different"
         }
     }
